@@ -2,9 +2,9 @@
 namespace Mdespeuilles\DrupalPasswordEncoderBundle\Services;
 
 use Mdespeuilles\DrupalPasswordEncoderBundle\Services\Password\PhpassHashedPassword;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-class DrupalPasswordEncoder implements PasswordEncoderInterface
+class DrupalPasswordEncoder implements PasswordHasherInterface
 {
     const DRUPAL_HASH_COUNT = 15;
     
@@ -24,26 +24,24 @@ class DrupalPasswordEncoder implements PasswordEncoderInterface
     /**
      * Encode a password to a Drupal way
      *
-     * @param string $password
-     * @param string $salt
+     * @param string $plainPassword
      * @return string
      */
-    public function encodePassword($password, $salt)
+    public function hash(string $plainPassword): string
     {
-        return $this->drupalPasswordService->hash($password);
+        return $this->drupalPasswordService->hash($plainPassword);
     }
     
     /**
      * Check if password is valid
      *
-     * @param string $encoded
-     * @param string $raw
-     * @param string $salt
+     * @param string $hashedPassword
+     * @param string $plainPassword
      * @return bool
      */
-    public function isPasswordValid($encoded, $raw, $salt)
+    public function verify(string $hashedPassword, string $plainPassword): bool
     {
-        return $this->drupalPasswordService->check($raw, $encoded);
+        return $this->drupalPasswordService->check($plainPassword, $hashedPassword);
     }
 
     /**
